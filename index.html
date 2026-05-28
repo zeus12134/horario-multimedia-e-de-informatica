@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horários Escolares - 10ºGH</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <style>
         :root {
             --primary-color: #2563eb;
@@ -348,22 +351,16 @@
     </footer>
 
     <script>
-        // Função para alternar entre Multimédia e Informática
         function switchCourse(course) {
-            // Atualizar botões de curso
             document.querySelectorAll('.course-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`[data-course="${course}"]`).classList.add('active');
 
-            // Apresentar secção correta
             document.querySelectorAll('.course-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(`${course}-section`).classList.add('active');
         }
 
-        // Função para alternar semanas dentro de cada secção
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
-            
-            // Procura apenas dentro do bloco pai atual para não interferir com o outro curso
             var parentSection = evt.currentTarget.closest('.course-section');
             
             tabcontent = parentSection.getElementsByClassName("tab-content");
@@ -381,18 +378,4 @@
         }
     </script>
 </body>
-
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horários Escolares - 10ºGH</title>
-    
-    <!-- LINHA A ADICIONAR (Se a tua imagem for um PNG): -->
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <!-- (Se usares um ficheiro .ico, usa esta em vez da de cima): 
-    <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
-
-    <style>
-        /* O teu CSS atual continua aqui igual... */
 </html>
