@@ -46,6 +46,34 @@
             font-weight: 500;
         }
 
+        /* Nova Secção de Avisos */
+        .notice-box {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            color: #78350f;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            max-width: 960px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .notice-box h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notice-box p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
         /* Seletor Principal de Cursos */
         .course-selector {
             display: flex;
@@ -199,6 +227,11 @@
         <h1>Horários de Aulas</h1>
         <div class="school-info">Escola AECV | Turma: 10ºGH</div>
     </header>
+
+    <div class="notice-box">
+        <h3>⚠️ Notas e Avisos importantes:</h3>
+        <p>As aulas assinaladas a azul escuro referem-se a módulos de Formação Individualizada (FID). Fiquem atentos a possíveis alterações de salas determinadas pela coordenação.</p>
+    </div>
 
     <div class="course-selector">
         <button class="course-btn active" data-course="multimedia" onclick="switchCourse('multimedia')">Multimédia</button>
