@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horários Escolares - 10ºGH</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --multimedia-color: #8b5cf6;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --highlight-bg: #dbeafe;
+            --highlight-text: #1e40af;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #0f172a;
+        }
+
+        .school-info {
+            font-size: 1.1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Seletor Principal de Cursos */
+        .course-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            background: #e2e8f0;
+            padding: 6px;
+            border-radius: 30px;
+        }
+
+        .course-btn {
+            background: none;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: style 0.3s, all 0.3s;
+            border-radius: 25px;
+        }
+
+        .course-btn.active[data-course="multimedia"] {
+            background-color: var(--multimedia-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        .course-btn.active[data-course="informatica"] {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Contentores de Curso */
+        .course-section {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .course-section.active {
+            display: block;
+        }
+
+        /* Sistema de Abas (Semanas) */
+        .tabs-container {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .tabs-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 6px;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--bg-color);
+        }
+
+        /* Cores dinâmicas para botões ativos de semanas baseado no curso */
+        .multimedia-active .tab-btn.active {
+            background-color: var(--multimedia-color);
+            color: white;
+        }
+
+        .informatica-active .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            overflow-x: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Tabelas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+            text-align: center;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 8px;
+            font-size: 0.95rem;
+            height: 24px;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .time-col {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            width: 110px;
+        }
+
+        .highlight {
+            background-color: var(--highlight-bg) !important;
+            color: var(--highlight-text);
+            font-weight: bold;
+            border: 2px solid #3b82f6 !important;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Horários de Aulas</h1>
+        <div class="school-info">Escola AECV | Turma: 10ºGH</div>
+    </header>
+
+    <div class="course-selector">
+        <button class="course-btn active" data-course="multimedia" onclick="switchCourse('multimedia')">Multimédia</button>
+        <button class="course-btn" data-course="informatica" onclick="switchCourse('informatica')">Informática</button>
+    </div>
+
+    <div id="multimedia-section" class="course-section active multimedia-active">
+        <div class="tabs-container">
+            <div class="tabs-menu">
+                <button class="tab-btn active" onclick="openTab(event, 'm-semana1')">1 a 5 de Junho</button>
+                <button class="tab-btn" onclick="openTab(event, 'm-semana2')">8 a 12 de Junho</button>
+                <button class="tab-btn" onclick="openTab(event, 'm-semana3')">15 a 19 de Junho</button>
+            </div>
+
+            <div id="m-semana1" class="tab-content active">
+                <table>
+                    <thead>
+                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="time-col">08:30 - 09:20</td><td class="highlight">FID</td><td class="highlight">FID</td><td>PORT</td><td>-</td><td>PORT</td></tr>
+                        <tr><td class="time-col">09:25 - 10:15</td><td class="highlight">FID</td><td class="highlight">FID</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td></tr>
+                        <tr><td class="time-col">10:40 - 11:30</td><td class="highlight">FID</td><td class="highlight">FID</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td></tr>
+                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td class="highlight">FID</td><td>PEC</td><td>-</td><td>AINT</td></tr>
+                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>PORT</td><td>PEC</td><td>-</td><td>AINT</td></tr>
+                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">14:25 - 15:15</td><td>TIC</td><td>FQ/PEC</td><td>-</td><td>-</td><td class="highlight">FQ/FID</td></tr>
+                        <tr><td class="time-col">15:30 - 16:20</td><td>TIC</td><td>AINT</td><td>-</td><td>-</td><td class="highlight">FQ/FID</td></tr>
+                        <tr><td class="time-col">16:25 - 17:15</td><td>PEC</td><td>AINT</td><td>-</td><td>-</td><td class="highlight">FID</td></tr>
+                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="m-semana2" class="tab-content">
+                <table>
+                    <thead>
+                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="time-col">08:30 - 09:20</td><td class="highlight">FID</td><td class="highlight">FID</td><td>PORT</td><td>ING_CONT</td><td>PORT</td></tr>
+                        <tr><td class="time-col">09:25 - 10:15</td><td class="highlight">FID</td><td class="highlight">FID</td><td>ING_CONT</td><td>ING_CONT</td><td>ING_CONT</td></tr>
+                        <tr><td class="time-col">10:40 - 11:30</td><td>ING_CONT</td><td>PEC</td><td>ING_CONT</td><td>PORT</td><td>ING_CONT</td></tr>
+                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>PEC</td><td>PEC</td><td>PORT</td><td>AINT</td></tr>
+                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>PORT</td><td>PEC</td><td>PEC</td><td>AINT</td></tr>
+                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">14:25 - 15:15</td><td>TIC</td><td>AINT</td><td class="highlight">FID</td><td>PEC</td><td>PEC</td></tr>
+                        <tr><td class="time-col">15:30 - 16:20</td><td>TIC</td><td>AINT</td><td class="highlight">FID</td><td>TIC</td><td>PEC</td></tr>
+                        <tr><td class="time-col">16:25 - 17:15</td><td>PEC</td><td>AINT</td><td class="highlight">FID</td><td>TIC</td><td>PEC</td></tr>
+                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="m-semana3" class="tab-content">
+                <table>
+                    <thead>
+                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="time-col">08:30 - 09:20</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">09:25 - 10:15</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">10:40 - 11:30</td><td>ING_CONT</td><td>PORT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">13:30 - 14:20</td><td class="highlight">FID</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">14:25 - 15:15</td><td class="highlight">FID</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">15:30 - 16:20</td><td class="highlight">FID</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">16:25 - 17:15</td><td class="highlight">FID</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="informatica-section" class="course-section informatica-active">
+        <div class="tabs-container">
+            <div class="tabs-menu">
+                <button class="tab-btn active" onclick="openTab(event, 'i-semana1')">1 a 5 de Junho</button>
+                <button class="tab-btn" onclick="openTab(event, 'i-semana2')">8 a 12 de Junho</button>
+                <button class="tab-btn" onclick="openTab(event, 'i-semana3')">15 a 19 de Junho</button>
+            </div>
+
+            <div id="i-semana1" class="tab-content active">
+                <table>
+                    <thead>
+                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="time-col">08:30 - 09:20</td><td>-</td><td>-</td><td>PORT</td><td>-</td><td>PORT</td></tr>
+                        <tr><td class="time-col">09:25 - 10:15</td><td>-</td><td>-</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td></tr>
+                        <tr><td class="time-col">10:40 - 11:30</td><td>-</td><td>-</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td></tr>
+                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td><td>AINT</td></tr>
+                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>AINT</td></tr>
+                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">14:25 - 15:15</td><td>TIC</td><td>FQ</td><td>-</td><td>-</td><td>FQ</td></tr>
+                        <tr><td class="time-col">15:30 - 16:20</td><td>TIC</td><td>AINT</td><td>-</td><td>-</td><td>FQ</td></tr>
+                        <tr><td class="time-col">16:25 - 17:15</td><td>-</td><td>AINT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="i-semana2" class="tab-content">
+                <table>
+                    <thead>
+                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="time-col">08:30 - 09:20</td><td>-</td><td>-</td><td>PORT</td><td>ING_CONT</td><td>PORT</td></tr>
+                        <tr><td class="time-col">09:25 - 10:15</td><td>-</td><td>-</td><td>ING_CONT</td><td>ING_CONT</td><td>ING_CONT</td></tr>
+                        <tr><td class="time-col">10:40 - 11:30</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td><td>PORT</td><td>ING_CONT</td></tr>
+                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>-</td><td>-</td><td>PORT</td><td>AINT</td></tr>
+                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>AINT</td></tr>
+                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">14:25 - 15:15</td><td>TIC</td><td>AINT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">15:30 - 16:20</td><td>TIC</td><td>AINT</td><td>-</td><td>TIC</td><td>-</td></tr>
+                        <tr><td class="time-col">16:25 - 17:15</td><td>-</td><td>AINT</td><td>-</td><td>TIC</td><td>-</td></tr>
+                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="i-semana3" class="tab-content">
+                <table>
+                    <thead>
+                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="time-col">08:30 - 09:20</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">09:25 - 10:15</td><td>PORT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">10:40 - 11:30</td><td>ING_CONT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">12:30 - 13:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">14:25 - 15:15</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">15:30 - 16:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">16:25 - 17:15</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Henrique Leite (10ºGH) - Todos os direitos reservados.</p>
+        <p>Escola AECV (Agrupamento de Escolas de Canedo Venda Nova)</p>
+    </footer>
+
+    <script>
+        // Função para alternar entre Multimédia e Informática
+        function switchCourse(course) {
+            // Atualizar botões de curso
+            document.querySelectorAll('.course-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-course="${course}"]`).classList.add('active');
+
+            // Apresentar secção correta
+            document.querySelectorAll('.course-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(`${course}-section`).classList.add('active');
+        }
+
+        // Função para alternar semanas dentro de cada secção
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            // Procura apenas dentro do bloco pai atual para não interferir com o outro curso
+            var parentSection = evt.currentTarget.closest('.course-section');
+            
+            tabcontent = parentSection.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tablinks = parentSection.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
