@@ -1,414 +1,452 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horários Escolares - 10ºGH</title>
-    
-    <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horário 10GH</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #4f46e5;
+      
+      /* Cores Pastel para as Disciplinas */
+      --c-pec: #f3e8ff;  --t-pec: #6b21a8;
+      --c-fid: #e0f2fe;  --t-fid: #0369a1;
+      --c-port: #dcfce7; --t-port: #166534;
+      --c-ing: #fef9c3;  --t-ing: #854d0e;
+      --c-aint: #fee2e2; --t-aint: #991b1b;
+      --c-tic: #ecfeff;  --t-tic: #155e75;
+      --c-fq: #eee8cc;   --t-fq: #713f12;
+    }
 
-    <style>
-        :root {
-            --primary-color: #2563eb;
-            --multimedia-color: #8b5cf6;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --border-color: #e2e8f0;
-            --highlight-bg: #dbeafe;
-            --highlight-text: #1e40af;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
 
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+    header {
+      max-width: 1000px;
+      margin: 0 auto 2rem;
+      text-align: center;
+    }
 
-        h1 {
-            margin: 0 0 10px 0;
-            color: #0f172a;
-        }
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
 
-        .school-info {
-            font-size: 1.1rem;
-            color: #64748b;
-            font-weight: 500;
-        }
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
 
-        /* Nova Secção de Avisos */
-        .notice-box {
-            background-color: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            color: #78350f;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            max-width: 960px;
-            width: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
 
-        .notice-box h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.05rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .tab-btn {
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--surface);
+      color: var(--muted);
+      transition: all 0.15s;
+    }
 
-        .notice-box p {
-            margin: 0;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
+    .tab-btn.active-mm, .tab-btn.active-inf {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
 
-        /* Seletor Principal de Cursos */
-        .course-selector {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            background: #e2e8f0;
-            padding: 6px;
-            border-radius: 30px;
-        }
+    .mode-indicator {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
 
-        .course-btn {
-            background: none;
-            border: none;
-            padding: 12px 28px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #475569;
-            cursor: pointer;
-            transition: style 0.3s, all 0.3s;
-            border-radius: 25px;
-        }
+    .mode-indicator span {
+      background: var(--border);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 500;
+      color: var(--text);
+    }
 
-        .course-btn.active[data-course="multimedia"] {
-            background-color: var(--multimedia-color);
-            color: white;
-            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
-        }
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
 
-        .course-btn.active[data-course="informatica"] {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-        }
+    .week-section {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
 
-        /* Contentores de Curso */
-        .course-section {
-            display: none;
-            width: 100%;
-            max-width: 1000px;
-        }
+    .week-section.visible { display: block; }
 
-        .course-section.active {
-            display: block;
-        }
+    .week-title {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+      background: #f1f5f9;
+      border-bottom: 1px solid var(--border);
+    }
 
-        /* Sistema de Abas (Semanas) */
-        .tabs-container {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
+    .table-wrap { overflow-x: auto; }
 
-        .tabs-menu {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      text-align: left;
+    }
 
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-radius: 6px;
-        }
+    th, td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
 
-        .tab-btn:hover {
-            background-color: var(--bg-color);
-        }
+    th {
+      background: #fafafa;
+      font-weight: 600;
+      color: var(--muted);
+    }
 
-        /* Cores dinâmicas para botões ativos de semanas baseado no curso */
-        .multimedia-active .tab-btn.active {
-            background-color: var(--multimedia-color);
-            color: white;
-        }
+    tr:last-child td { border-bottom: none; }
 
-        .informatica-active .tab-btn.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
+    td:first-child {
+      font-weight: 500;
+      color: var(--muted);
+      background: #fafafa;
+      width: 120px;
+    }
 
-        .tab-content {
-            display: none;
-            overflow-x: auto;
-        }
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
 
-        .tab-content.active {
-            display: block;
-        }
+    /* Cores das disciplinas */
+    .pill-PEC  { background: var(--c-pec); color: var(--t-pec); }
+    .pill-FID  { background: var(--c-fid); color: var(--t-fid); }
+    .pill-PORT { background: var(--c-port); color: var(--t-port); }
+    .pill-ING  { background: var(--c-ing); color: var(--t-ing); }
+    .pill-AINT { background: var(--c-aint); color: var(--t-aint); }
+    .pill-TIC  { background: var(--c-tic); color: var(--t-tic); }
+    .pill-FQ   { background: var(--c-fq); color: var(--t-fq); }
 
-        /* Tabelas */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-            text-align: center;
-        }
+    .pill-PEC.special {
+      outline: 2px solid var(--t-pec);
+    }
 
-        th, td {
-            border: 1px solid var(--border-color);
-            padding: 12px 8px;
-            font-size: 0.95rem;
-            height: 24px;
-        }
+    tr.has-special-mm td { background-color: #fdfaff; }
 
-        th {
-            background-color: #f1f5f9;
-            color: #334155;
-            font-weight: 600;
-        }
+    .empty { color: #cbd5e1; }
 
-        .time-col {
-            background-color: #f1f5f9;
-            font-weight: 600;
-            width: 110px;
-        }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
 
-        .highlight {
-            background-color: var(--highlight-bg) !important;
-            color: var(--highlight-text);
-            font-weight: bold;
-            border: 2px solid #3b82f6 !important;
-        }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
 
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #64748b;
-            border-top: 1px solid var(--border-color);
-            padding-top: 20px;
-            width: 100%;
-            max-width: 1000px;
-        }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
 
-        footer p {
-            margin: 5px 0;
-        }
-    </style>
+    .special-note {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      padding: 0.75rem 1rem;
+      background: #f8fafc;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 4px 4px 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Horários de Aulas</h1>
-        <div class="school-info">Escola AECV | Turma: 10ºGH</div>
-    </header>
+<header>
+  <h1>Horário 10GH</h1>
+  <p>Exames e Avaliações Especiais — Junho 2026</p>
+</header>
 
-    <div class="notice-box">
-        <h3>⚠️ Notas e Avisos importantes:</h3>
-        <p>Dia 10 de junho é feriado dia de Portugal</p>
+<div class="tabs">
+  <button class="tab-btn active-mm" onclick="setMode('multimedia')">Multimédia</button>
+  <button class="tab-btn" onclick="setMode('informatica')">Informática</button>
+</div>
+
+<div class="mode-indicator" id="modeLabel">
+  <span>Multimédia — Aula especial: PEC</span>
+</div>
+
+<div class="content">
+
+  <!-- WEEK 1 -->
+  <div class="week-section visible" id="week1">
+    <div class="week-title">1 a 5 de junho</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Horário</th>
+            <th>Segunda</th>
+            <th>Terça</th>
+            <th>Quarta</th>
+            <th>Quinta</th>
+            <th>Sexta</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-w1"></tbody>
+      </table>
     </div>
+  </div>
 
-    <div class="course-selector">
-        <button class="course-btn active" data-course="multimedia" onclick="switchCourse('multimedia')">Multimédia</button>
-        <button class="course-btn" data-course="informatica" onclick="switchCourse('informatica')">Informática</button>
+  <!-- WEEK 2 -->
+  <div class="week-section visible" id="week2">
+    <div class="week-title">8 a 12 de junho</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Horário</th>
+            <th>Segunda</th>
+            <th>Terça</th>
+            <th>Quarta</th>
+            <th>Quinta</th>
+            <th>Sexta</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-w2"></tbody>
+      </table>
     </div>
+  </div>
 
-    <div id="multimedia-section" class="course-section active multimedia-active">
-        <div class="tabs-container">
-            <div class="tabs-menu">
-                <button class="tab-btn active" onclick="openTab(event, 'm-semana1')">1 a 5 de Junho</button>
-                <button class="tab-btn" onclick="openTab(event, 'm-semana2')">8 a 12 de Junho</button>
-                <button class="tab-btn" onclick="openTab(event, 'm-semana3')">15 a 19 de Junho</button>
-            </div>
-
-            <div id="m-semana1" class="tab-content active">
-                <table>
-                    <thead>
-                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="time-col">08:30 - 09:20</td><td class="highlight">FID</td><td class="highlight">FID</td><td>PORT</td><td>-</td><td>PORT</td></tr>
-                        <tr><td class="time-col">09:25 - 10:15</td><td class="highlight">FID</td><td class="highlight">FID</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td></tr>
-                        <tr><td class="time-col">10:40 - 11:30</td><td class="highlight">FID</td><td class="highlight">FID</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td></tr>
-                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td class="highlight">FID</td><td>PEC</td><td>-</td><td>AINT</td></tr>
-                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>PORT</td><td>PEC</td><td>-</td><td>AINT</td></tr>
-                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">14:25 - 15:15</td><td>TIC</td><td>FQ/PEC</td><td>-</td><td>-</td><td class="highlight">FQ/FID</td></tr>
-                        <tr><td class="time-col">15:30 - 16:20</td><td>TIC</td><td>AINT</td><td>-</td><td>-</td><td class="highlight">FQ/FID</td></tr>
-                        <tr><td class="time-col">16:25 - 17:15</td><td>PEC</td><td>AINT</td><td>-</td><td>-</td><td class="highlight">FID</td></tr>
-                        <tr><td class="time-col">17:20 - 18:10</td><td>PEC</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div id="m-semana2" class="tab-content">
-                <table>
-                    <thead>
-                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="time-col">08:30 - 09:20</td><td class="highlight">FID</td><td class="highlight">FID</td><td>PORT</td><td>ING_CONT</td><td>PORT</td></tr>
-                        <tr><td class="time-col">09:25 - 10:15</td><td class="highlight">FID</td><td class="highlight">FID</td><td>ING_CONT</td><td>ING_CONT</td><td>ING_CONT</td></tr>
-                        <tr><td class="time-col">10:40 - 11:30</td><td>ING_CONT</td><td>PEC</td><td>ING_CONT</td><td>PORT</td><td>ING_CONT</td></tr>
-                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>PEC</td><td>PEC</td><td>PORT</td><td>AINT</td></tr>
-                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>PORT</td><td>PEC</td><td>PEC</td><td>AINT</td></tr>
-                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">14:25 - 15:15</td><td>TIC</td><td>AINT</td><td class="highlight">FID</td><td>PEC</td><td>PEC</td></tr>
-                        <tr><td class="time-col">15:30 - 16:20</td><td>TIC</td><td>AINT</td><td class="highlight">FID</td><td>TIC</td><td>PEC</td></tr>
-                        <tr><td class="time-col">16:25 - 17:15</td><td>PEC</td><td>AINT</td><td class="highlight">FID</td><td>TIC</td><td>PEC</td></tr>
-                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div id="m-semana3" class="tab-content">
-                <table>
-                    <thead>
-                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="time-col">08:30 - 09:20</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">09:25 - 10:15</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">10:40 - 11:30</td><td>ING_CONT</td><td>PORT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">13:30 - 14:20</td><td class="highlight">FID</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">14:25 - 15:15</td><td class="highlight">FID</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">15:30 - 16:20</td><td class="highlight">FID</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">16:25 - 17:15</td><td class="highlight">FID</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <!-- WEEK 3 -->
+  <div class="week-section visible" id="week3">
+    <div class="week-title">15 a 19 de junho</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Horário</th>
+            <th>Segunda</th>
+            <th>Terça</th>
+            <th>Quarta</th>
+            <th>Quinta</th>
+            <th>Sexta</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-w3"></tbody>
+      </table>
     </div>
+  </div>
 
-    <div id="informatica-section" class="course-section informatica-active">
-        <div class="tabs-container">
-            <div class="tabs-menu">
-                <button class="tab-btn active" onclick="openTab(event, 'i-semana1')">1 a 5 de Junho</button>
-                <button class="tab-btn" onclick="openTab(event, 'i-semana2')">8 a 12 de Junho</button>
-                <button class="tab-btn" onclick="openTab(event, 'i-semana3')">15 a 19 de Junho</button>
-            </div>
+  <div class="legend" id="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--c-pec)"></div> PEC</div>
+    <div class="legend-item" id="legend-fid"><div class="legend-dot" style="background:var(--c-fid)"></div> FID</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--c-port)"></div> PORT</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--c-ing)"></div> ING_CONT</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--c-aint)"></div> AINT</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--c-tic)"></div> TIC</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--c-fq)" id="legend-fq-dot"></div> <span id="legend-fq-text">FQ/FID</span></div>
+  </div>
 
-            <div id="i-semana1" class="tab-content active">
-                <table>
-                    <thead>
-                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="time-col">08:30 - 09:20</td><td>FQ</td><td>-</td><td>PORT</td><td>-</td><td>PORT</td></tr>
-                        <tr><td class="time-col">09:25 - 10:15</td><td>FQ</td><td>-</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td></tr>
-                        <tr><td class="time-col">10:40 - 11:30</td><td>FQ</td><td>-</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td></tr>
-                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td><td>AINT</td></tr>
-                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>AINT</td></tr>
-                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">14:25 - 15:15</td><td>TIC</td><td>FQ</td><td>-</td><td>-</td><td>FQ</td></tr>
-                        <tr><td class="time-col">15:30 - 16:20</td><td>TIC</td><td>AINT</td><td>-</td><td>-</td><td>FQ</td></tr>
-                        <tr><td class="time-col">16:25 - 17:15</td><td>-</td><td>AINT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                    </tbody>
-                </table>
-            </div>
+  <div class="special-note" id="specialNote">
+    <strong>Aula especial de Multimédia:</strong> PEC — destacada com contorno.
+  </div>
 
-            <div id="i-semana2" class="tab-content">
-                <table>
-                    <thead>
-                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="time-col">08:30 - 09:20</td><td>-</td><td>-</td><td>PORT</td><td>ING_CONT</td><td>PORT</td></tr>
-                        <tr><td class="time-col">09:25 - 10:15</td><td>-</td><td>-</td><td>ING_CONT</td><td>ING_CONT</td><td>ING_CONT</td></tr>
-                        <tr><td class="time-col">10:40 - 11:30</td><td>ING_CONT</td><td>-</td><td>ING_CONT</td><td>PORT</td><td>ING_CONT</td></tr>
-                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>-</td><td>-</td><td>PORT</td><td>AINT</td></tr>
-                        <tr><td class="time-col">12:30 - 13:20</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>AINT</td></tr>
-                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">14:25 - 15:15</td><td>TIC</td><td>AINT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">15:30 - 16:20</td><td>TIC</td><td>AINT</td><td>-</td><td>TIC</td><td>-</td></tr>
-                        <tr><td class="time-col">16:25 - 17:15</td><td>-</td><td>AINT</td><td>-</td><td>TIC</td><td>-</td></tr>
-                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                    </tbody>
-                </table>
-            </div>
+</div>
 
-            <div id="i-semana3" class="tab-content">
-                <table>
-                    <thead>
-                        <tr><th>Tempos</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="time-col">08:30 - 09:20</td><td>PORT</td><td>PORT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">09:25 - 10:15</td><td>PORT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">10:40 - 11:30</td><td>ING_CONT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">11:35 - 12:25</td><td>ING_CONT</td><td>ING_CONT</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">12:30 - 13:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">13:30 - 14:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">14:25 - 15:15</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">15:30 - 16:20</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">16:25 - 17:15</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="time-col">17:20 - 18:10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+<footer>
+  &copy; <strong>Henrique Leite</strong> — 10GH · Todos os direitos reservados
+</footer>
 
-    <footer>
-        <p>&copy; 2026 Henrique Leite (10ºGH) - Todos os direitos reservados.</p>
-        <p>Escola AECV</p>
-    </footer>
+<script>
+  const weeks = [
+    {
+      id: 'w1',
+      rows: [
+        { time: '08:30 – 09:20', days: ['FQ/FID', 'PEC',  'PORT',     '', 'PORT'] },
+        { time: '09:25 – 10:15', days: ['FQ/FID', 'PEC',  'PEC',      '', 'ING_CONT'] },
+        { time: '10:40 – 11:30', days: ['FID',    'AINT', 'PEC',      '', 'ING_CONT'] },
+        { time: '11:35 – 12:25', days: ['ING_CONT','AINT','ING_CONT', '', 'AINT'] },
+        { time: '12:30 – 13:20', days: ['PORT',   'PORT', 'ING_CONT', '', 'AINT'] },
+        { time: '13:30 – 14:20', days: ['', '', '', '', ''] },
+        { time: '14:25 – 15:15', days: ['TIC',    'FQ/FID','FID',     '', 'FID'] },
+        { time: '15:30 – 16:20', days: ['TIC',    'FID',  'FID',      '', 'FID'] },
+        { time: '16:25 – 17:15', days: ['PEC',    'FID',  'FID',      '', 'FID'] },
+        { time: '17:20 – 18:10', days: ['PEC',    '',     '',         '', ''] },
+      ]
+    },
+    {
+      id: 'w2',
+      rows: [
+        { time: '08:30 – 09:20', days: ['FID',     'FID',  '', 'PEC',     'PORT'] },
+        { time: '09:25 – 10:15', days: ['FID',     'FID',  '', 'PEC',     'ING_CONT'] },
+        { time: '10:40 – 11:30', days: ['ING_CONT','FID',  '', 'PORT',    'ING_CONT'] },
+        { time: '11:35 – 12:25', days: ['ING_CONT','FID',  '', 'PORT',    'AINT'] },
+        { time: '12:30 – 13:20', days: ['PORT',    'PORT', '', '',        'AINT'] },
+        { time: '13:30 – 14:20', days: ['',        '',     '', 'ING_CONT',''] },
+        { time: '14:25 – 15:15', days: ['TIC',     'AINT', '', 'ING_CONT','FID'] },
+        { time: '15:30 – 16:20', days: ['TIC',     'AINT', '', 'TIC',     'FID'] },
+        { time: '16:25 – 17:15', days: ['PEC',     'AINT', '', 'TIC',     ''] },
+        { time: '17:20 – 18:10', days: ['',        '',     '', '',        ''] },
+      ]
+    },
+    {
+      id: 'w3',
+      rows: [
+        { time: '08:30 – 09:20', days: ['PORT',     'PORT',     'PEC',     '', ''] },
+        { time: '09:25 – 10:15', days: ['PORT',     'PORT',     'PEC',     '', ''] },
+        { time: '10:40 – 11:30', days: ['ING_CONT', 'ING_CONT', 'ING_CONT','', ''] },
+        { time: '11:35 – 12:25', days: ['ING_CONT', 'ING_CONT', 'ING_CONT','', ''] },
+        { time: '12:30 – 13:20', days: ['',         'ING_CONT', '',        '', ''] },
+        { time: '13:30 – 14:20', days: ['FID',      '',         '',        '', ''] },
+        { time: '14:25 – 15:15', days: ['FID',      '',         '',        '', ''] },
+        { time: '15:30 – 16:20', days: ['FID',      '',         '',        '', ''] },
+        { time: '16:25 – 17:15', days: ['',         '',         '',        '', ''] },
+        { time: '17:20 – 18:10', days: ['',         '',         '',        '', ''] },
+      ]
+    }
+  ];
 
-    <script>
-        function switchCourse(course) {
-            document.querySelectorAll('.course-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[data-course="${course}"]`).classList.add('active');
+  const mmSubjects  = ['PEC', 'PORT', 'ING_CONT', 'FQ/FID', 'FID'];
+  const infSubjects = ['TIC', 'PORT', 'ING_CONT', 'FQ/FID', 'AINT']; // FID removida de Informática
+  const mmSpecial   = 'PEC';
 
-            document.querySelectorAll('.course-section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(`${course}-section`).classList.add('active');
-        }
+  function pillClass(subj) {
+    if (subj.includes('PEC'))     return 'pill-PEC';
+    if (subj.includes('FQ'))      return 'pill-FQ';
+    if (subj.includes('FID'))     return 'pill-FID';
+    if (subj.includes('PORT'))    return 'pill-PORT';
+    if (subj.includes('ING'))     return 'pill-ING';
+    if (subj.includes('AINT'))    return 'pill-AINT';
+    if (subj.includes('TIC'))     return 'pill-TIC';
+    return '';
+  }
 
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            var parentSection = evt.currentTarget.closest('.course-section');
-            
-            tabcontent = parentSection.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].classList.remove("active");
-            }
-            
-            tablinks = parentSection.getElementsByClassName("tab-btn");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-            
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
-        }
-    </script>
+  function renderCell(subj, mode) {
+    if (!subj) return `<span class="empty">—</span>`;
+    
+    // Se estiver no modo Informática e for a disciplina FID, remove-a (devolve vazio)
+    if (mode === 'informatica' && subj === 'FID') {
+      return `<span class="empty">—</span>`;
+    }
+
+    const isSpecialMM  = mode === 'multimedia' && subj === mmSpecial;
+    const specialClass = isSpecialMM ? ' special' : '';
+    const subjects = mode === 'multimedia' ? mmSubjects : infSubjects;
+    const relevant = subjects.some(s => subj.includes(s.replace('/FID','')));
+    const opacity  = relevant ? '' : ' style="opacity:0.25; filter:grayscale(50%);"';
+    
+    // Altera o texto visível de FQ/FID para FQ apenas em Informática
+    let displayName = subj;
+    if (mode === 'informatica' && subj === 'FQ/FID') {
+      displayName = 'FQ';
+    }
+
+    return `<span class="pill ${pillClass(subj)}${specialClass}"${opacity}>${displayName}</span>`;
+  }
+
+  function renderTable(tbodyId, weekData, mode) {
+    const tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = '';
+    weekData.rows.forEach(row => {
+      const hasPEC = row.days.includes('PEC');
+      const rowClass = (mode === 'multimedia' && hasPEC) ? ' class="has-special-mm"' : '';
+      let html = `<tr${rowClass}><td>${row.time}</td>`;
+      row.days.forEach(d => {
+        html += `<td>${renderCell(d, mode)}</td>`;
+      });
+      html += `</tr>`;
+      tbody.innerHTML += html;
+    });
+  }
+
+  function renderAll(mode) {
+    weeks.forEach((w, i) => {
+      renderTable(`tbody-${w.id}`, w, mode);
+    });
+  }
+
+  function setMode(mode) {
+    const btns = document.querySelectorAll('.tab-btn');
+    const label = document.getElementById('modeLabel');
+    const note  = document.getElementById('specialNote');
+    const legendText = document.getElementById('legend-fq-text');
+    const legendFid = document.getElementById('legend-fid');
+
+    btns.forEach(b => b.classList.remove('active-mm', 'active-inf'));
+
+    if (mode === 'multimedia') {
+      btns[0].classList.add('active-mm');
+      label.innerHTML = '<span>Multimédia — Aula especial: PEC</span>';
+      note.innerHTML = '<strong>Aula especial de Multimédia:</strong> PEC — destacada com contorno.';
+      legendText.textContent = 'FQ/FID';
+      legendFid.style.display = 'flex'; // Mostra a legenda de FID em Multimédia
+    } else {
+      btns[1].classList.add('active-inf');
+      label.innerHTML = '<span>Informática — Sem aula especial</span>';
+      note.innerHTML = '<strong>Informática:</strong> Não tem aula especial atribuída neste horário.';
+      legendText.textContent = 'FQ';
+      legendFid.style.display = 'none'; // Oculta a legenda de FID em Informática
+    }
+
+    renderAll(mode);
+  }
+
+  renderAll('multimedia');
+</script>
+
 </body>
-    </html>
+</html>
